@@ -1,0 +1,10 @@
+Dockerfile
+.dockerignore
+node_modules
+npm-debug.log
+ormlogs.log
+coverage
+db
+dist
+nomad-job.hcl
+.gitlab-ci.yml

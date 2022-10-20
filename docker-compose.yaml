@@ -1,0 +1,38 @@
+version: '3.5'
+
+services:
+  app: &default-app
+    build:
+      dockerfile: Dockerfile
+      context: .
+      # Only will build development stage from our dockerfile
+      target: development
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules # exclude node modules
+    env_file:
+      - .env
+    # Run a command against the development stage of the image
+    command: yarn run start:dev
+    ports:
+      - ${APP_PORT}:${APP_PORT}
+    depends_on:
+      - db
+  cron:
+    <<: *default-app
+    ports: []
+    command: yarn run start:jobs
+  db:
+    image: mysql:8.0
+    restart: always
+    hostname: ${MYSQL_HOST}
+    volumes:
+      - ./init:/docker-entrypoint-initdb.d
+      - ./db/data:/var/lib/mysql
+    ports:
+      - "${MYSQL_PORT}:${MYSQL_PORT}"
+    environment:
+      MYSQL_TCP_PORT: ${MYSQL_PORT}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DB_NAME}
+    user: 'mysql'
