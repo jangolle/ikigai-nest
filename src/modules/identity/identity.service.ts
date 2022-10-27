@@ -9,6 +9,11 @@ export class IdentityService {
   async findIdentity(
     where: Prisma.IdentityWhereUniqueInput,
   ): Promise<Identity | null> {
+    this.prisma.identity.create;
     return this.prisma.identity.findUnique({ where });
+  }
+
+  async createIdentity(data: Prisma.IdentityCreateInput): Promise<Identity> {
+    return this.prisma.identity.create({ data });
   }
 }

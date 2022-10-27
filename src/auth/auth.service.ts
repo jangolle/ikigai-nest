@@ -32,6 +32,19 @@ export class AuthService {
     return null;
   }
 
+  async registerByEmailAndPassword(
+    email: string,
+    password: string,
+  ): Promise<IdentitySafe> {
+    const { passwordHash, ...identity } =
+      await this.identityService.createIdentity({
+        email,
+        passwordHash: await AuthService.hashPassword(password),
+      });
+
+    return identity;
+  }
+
   async login(identity: IdentityJwtPayload): Promise<string> {
     return this.jwtService.sign(identity);
   }

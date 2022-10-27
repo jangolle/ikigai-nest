@@ -1,0 +1,30 @@
+@baseUrl = http://localhost:{{$dotenv APP_PORT}}
+@version = v1
+@insecurePassword = 12345
+@securePassword = xZ395Hsw5L
+@jwt = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJmNWUxYjFkYy0wYjU1LTRkODQtOWZlMy1jMzhmZjk0NjQ2MTIiLCJlbWFpbCI6InRlc3RAbWFpbC5jb20iLCJpYXQiOjE2NjY5MDI3MDIsImV4cCI6MTY2OTQ5NDcwMn0.nWNqLPgCbDjSUfzUz-MqcZC11I6s50N9WTFpt6TRCpA
+
+### Get app status
+GET {{baseUrl}}/{{version}}/
+
+### Sign Up with new user
+POST {{baseUrl}}/{{version}}/auth/sign-up
+Content-Type: application/json
+
+{
+    "email": "test@mail.com",
+    "password": "{{securePassword}}"
+}
+
+### Sign In with email and password
+POST {{baseUrl}}/{{version}}/auth/sign-in
+Content-Type: application/json
+
+{
+    "username": "test@mail.com",
+    "password": "{{securePassword}}"
+}
+
+### Get authorized user details
+GET {{baseUrl}}/{{version}}/auth/me
+Authorization: Bearer {{jwt}}

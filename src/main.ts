@@ -9,6 +9,7 @@ import { PrismaService } from './services/prisma.service';
 const runtimeMode: Mode = <Mode>(process.env.APP_MODE || Mode.SERVER);
 
 async function bootstrap() {
+  // TODO: manage log levels with configurations
   const logger = new Logger('Main');
   logger.localInstance.log(`Runtime mode: ${runtimeMode}`);
   let app = undefined;
@@ -17,6 +18,19 @@ async function bootstrap() {
     case Mode.SERVER:
       app = await NestFactory.create(AppModule, {
         logger,
+      });
+      // TODO: move this to nest middleware
+      app.use((req: any, res: any, next: () => void) => {
+        logger.debug(
+          `Incoming request ${req.method} ${req.path}:`,
+          JSON.stringify({
+            headers: req.headers,
+            query: req.query,
+            body: req.body,
+          }),
+        );
+
+        next();
       });
       app.useGlobalPipes(new ValidationPipe({ transform: true }));
       app.enableCors();

@@ -25,7 +25,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     const identity = await this.identityService.findIdentity({ id: sub });
 
     if (!identity) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException('Invalid auth token');
     }
 
     const { passwordHash, ...result } = identity;
