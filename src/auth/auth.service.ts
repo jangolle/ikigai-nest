@@ -1,35 +1,35 @@
 import { Injectable } from '@nestjs/common';
-import { UsersService } from '../users/users.service';
-import { User } from '../users/entities/user.entity';
+import { IdentityService } from '../modules/identity/identity.service';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { IdentityJwtPayload } from './dto/identity-jwt-payload.interface';
+import { IdentitySafe } from 'src/modules/identity';
 
 const SALT_ROUNDS = 8;
 
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly usersService: UsersService,
+    private readonly identityService: IdentityService,
     private readonly jwtService: JwtService,
   ) {}
 
-  async validateUserByEmailAndPassword(
+  async validateIdentityByEmailAndPassword(
     email: string,
     password: string,
-  ): Promise<User | undefined> {
-    const user = await this.usersService.findByEmail(email);
+  ): Promise<IdentitySafe | null> {
+    const identity = await this.identityService.findIdentity({ email });
 
     if (
-      user &&
-      (await AuthService.checkPassword(password, user.passwordHash))
+      identity &&
+      (await AuthService.checkPassword(password, identity.passwordHash))
     ) {
-      const { passwordHash, ...result } = user;
+      const { passwordHash, ...result } = identity;
 
       return result;
     }
 
-    return undefined;
+    return null;
   }
 
   async login(identity: IdentityJwtPayload): Promise<string> {

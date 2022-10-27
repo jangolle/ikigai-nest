@@ -3,13 +3,13 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { IdentityJwtPayload } from '../dto/identity-jwt-payload.interface';
-import { User } from '../../users/entities/user.entity';
-import { UsersService } from '../../users/users.service';
+import { IdentityService } from '../../modules/identity/identity.service';
+import { IdentitySafe } from 'src/modules/identity';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(
-    private readonly usersService: UsersService,
+    private readonly identityService: IdentityService,
     private readonly configService: ConfigService,
   ) {
     super({
@@ -19,16 +19,16 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  async validate(payload: IdentityJwtPayload): Promise<User> {
+  async validate(payload: IdentityJwtPayload): Promise<IdentitySafe> {
     const { sub } = payload;
 
-    const user = await this.usersService.findById(sub);
+    const identity = await this.identityService.findIdentity({ id: sub });
 
-    if (!user) {
+    if (!identity) {
       throw new UnauthorizedException();
     }
 
-    const { passwordHash, ...result } = user;
+    const { passwordHash, ...result } = identity;
 
     return result;
   }

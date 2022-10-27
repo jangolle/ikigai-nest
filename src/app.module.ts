@@ -1,7 +1,7 @@
 import { Module, ModuleMetadata } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import appConfig from './config/app.config';
 import * as Joi from 'joi';
 import { StatusCommand } from './commands/status.command';
@@ -9,12 +9,27 @@ import { AppWorker } from './app.worker';
 import { ScheduleModule } from '@nestjs/schedule';
 import { JobsModule } from './jobs/jobs.module';
 import { AuthModule } from './auth/auth.module';
-import { UsersModule } from './users/users.module';
+import { IdentityModule } from './modules/identity/identity.module';
+import { PrismaService } from './services/prisma.service';
 
 export enum Mode {
   SERVER = 'server',
   JOBS = 'jobs',
 }
+
+const prismaService = {
+  provide: PrismaService,
+  useFactory: (configService: ConfigService) => {
+    // TODO: resolve with proper log management
+    return new PrismaService({
+      log:
+        configService.get<string>('NODE_ENV') === 'development'
+          ? ['query', 'info', 'error', 'warn']
+          : ['error', 'warn'],
+    });
+  },
+  inject: [ConfigService],
+};
 
 const metadata: ModuleMetadata = {
   imports: [
@@ -36,6 +51,8 @@ const metadata: ModuleMetadata = {
         MYSQL_PASSWORD: Joi.string().required(),
         MYSQL_DB_NAME: Joi.string().required(),
         MYSQL_TEST_DB_NAME: Joi.string().required(),
+        DATABASE_URL: Joi.string().required(),
+        DATABASE_TEST_URL: Joi.string().required(),
         JWT_SECRET: Joi.string().min(8).required(),
         JWT_EXPIRES_IN: Joi.string()
           .pattern(/^\d+([smhdwy])$/)
@@ -44,10 +61,10 @@ const metadata: ModuleMetadata = {
     }),
     ScheduleModule.forRoot(),
     AuthModule,
-    UsersModule,
+    IdentityModule,
   ],
   controllers: [AppController],
-  providers: [AppService, StatusCommand],
+  providers: [AppService, prismaService, StatusCommand],
 };
 
 @Module(metadata)

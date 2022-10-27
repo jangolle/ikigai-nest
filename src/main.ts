@@ -4,6 +4,7 @@ import { Logger, ValidationPipe, VersioningType } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ConfigService } from '@nestjs/config';
 import { AppWorker } from './app.worker';
+import { PrismaService } from './services/prisma.service';
 
 const runtimeMode: Mode = <Mode>(process.env.APP_MODE || Mode.SERVER);
 
@@ -20,6 +21,7 @@ async function bootstrap() {
       app.useGlobalPipes(new ValidationPipe({ transform: true }));
       app.enableCors();
       app.enableVersioning({ type: VersioningType.URI, defaultVersion: '1' });
+      await app.get(PrismaService).enableShutdownHooks(app);
 
       const configService = app.get(ConfigService);
       const port = configService.get<number>('APP_PORT', { infer: true });
@@ -52,6 +54,7 @@ async function bootstrap() {
       app = await NestFactory.createApplicationContext(JobsAppModule, {
         logger,
       });
+      await app.get(PrismaService).enableShutdownHooks(app);
       app.enableShutdownHooks();
       logger.localInstance.log('App starting as worker');
       await app.get(AppWorker).run();

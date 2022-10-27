@@ -1,6 +1,13 @@
 {
   "moduleFileExtensions": ["js", "json", "ts"],
   "rootDir": ".",
+  "moduleDirectories": [
+    "node_modules",
+    "<rootDir>/../"
+  ],
+  "setupFilesAfterEnv": [
+    "./bootstrap/db.ts"
+  ],
   "testEnvironment": "node",
   "testRegex": ".e2e-spec.ts$",
   "transform": {

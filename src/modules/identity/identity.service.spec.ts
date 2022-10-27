@@ -1,23 +1,20 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { AuthService } from './auth.service';
-import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from 'src/services/prisma.service';
-import { IdentityModule } from 'src/modules/identity/identity.module';
+import { IdentityService } from './identity.service';
 
-describe('AuthService', () => {
-  let service: AuthService;
+describe('IdentityService', () => {
+  let service: IdentityService;
   const prismaService = {};
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [IdentityModule],
-      providers: [AuthService, JwtService],
+      providers: [IdentityService, PrismaService],
     })
       .overrideProvider(PrismaService)
       .useValue(prismaService)
       .compile();
 
-    service = module.get<AuthService>(AuthService);
+    service = module.get<IdentityService>(IdentityService);
   });
 
   it('should be defined', () => {

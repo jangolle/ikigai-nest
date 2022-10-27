@@ -1,9 +1,9 @@
 import { Controller, Get, Request, UseGuards } from '@nestjs/common';
 import { AppService } from './app.service';
 import { ApiOkResponse, ApiOperation, ApiProperty } from '@nestjs/swagger';
-import { User } from './users/entities/user.entity';
-import { UserAuthenticatedRequest } from './auth/dto/user-authenticated-request.interface';
+import { AuthenticatedRequest } from './auth/dto/authenticated-request.interface';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
+import { IdentitySafe } from './modules/identity';
 
 abstract class StatusResponse {
   @ApiProperty({ example: 'OK', type: String })
@@ -26,7 +26,7 @@ export class AppController {
 
   @UseGuards(JwtAuthGuard)
   @Get('/me')
-  async me(@Request() req: UserAuthenticatedRequest): Promise<User> {
-    return req.user;
+  async me(@Request() req: AuthenticatedRequest): Promise<IdentitySafe> {
+    return req.identity;
   }
 }
