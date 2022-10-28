@@ -49,7 +49,7 @@ export class AuthService {
     return this.jwtService.sign(identity);
   }
 
-  protected static async hashPassword(password: string): Promise<string> {
+  public static async hashPassword(password: string): Promise<string> {
     return bcrypt.hash(password, SALT_ROUNDS);
   }
 

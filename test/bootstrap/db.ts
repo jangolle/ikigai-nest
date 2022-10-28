@@ -15,7 +15,7 @@ const prismaBinary = join(
 const { DATABASE_TEST_URL } = process.env;
 process.env.DATABASE_URL = DATABASE_TEST_URL;
 
-const dbResetFn = () => {
+export const resetDb = () => {
   execSync(`${prismaBinary} migrate reset --force`, {
     env: {
       ...process.env,
@@ -24,5 +24,5 @@ const dbResetFn = () => {
   });
 };
 
-beforeEach(dbResetFn);
-afterEach(dbResetFn);
+// acitivities with db for all test globally
+// beforeEach(resetDb)
