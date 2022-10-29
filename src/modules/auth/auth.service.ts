@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { IdentityService } from '../modules/identity/identity.service';
+import { IdentityService } from '../identity/identity.service';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { IdentityJwtPayload } from './dto/identity-jwt-payload.interface';

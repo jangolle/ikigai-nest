@@ -8,7 +8,7 @@ import * as request from 'supertest';
 import { AppModule } from 'src/app.module';
 import { resetDb } from './bootstrap/db';
 import { PrismaService } from 'src/services/prisma.service';
-import { AuthService } from 'src/auth/auth.service';
+import { AuthService } from 'src/modules/auth/auth.service';
 
 describe('AuthController (e2e)', () => {
   let app: INestApplication;

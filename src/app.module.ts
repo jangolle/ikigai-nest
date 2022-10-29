@@ -1,16 +1,16 @@
 import { Module, ModuleMetadata } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import appConfig from './config/app.config';
-import * as Joi from 'joi';
-import { StatusCommand } from './commands/status.command';
-import { AppWorker } from './app.worker';
 import { ScheduleModule } from '@nestjs/schedule';
-import { JobsModule } from './jobs/jobs.module';
-import { AuthModule } from './auth/auth.module';
-import { IdentityModule } from './modules/identity/identity.module';
-import { PrismaService } from './services/prisma.service';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import * as Joi from 'joi';
+import { AppController } from 'src/app.controller';
+import { AppService } from 'src/app.service';
+import appConfig from 'src/config/app.config';
+import { StatusCommand } from 'src/commands/status.command';
+import { AppWorker } from 'src/app.worker';
+import { JobsModule } from 'src/jobs/jobs.module';
+import { AuthModule } from 'src/modules/auth/auth.module';
+import { IdentityModule } from 'src/modules/identity/identity.module';
+import { PrismaService } from 'src/services/prisma.service';
 
 export enum Mode {
   SERVER = 'server',
