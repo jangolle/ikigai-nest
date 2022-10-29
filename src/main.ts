@@ -5,6 +5,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ConfigService } from '@nestjs/config';
 import { AppWorker } from './app.worker';
 import { PrismaService } from './services/prisma.service';
+import { AppConfig } from './config/app.config';
 
 const runtimeMode: Mode = <Mode>(process.env.APP_MODE || Mode.SERVER);
 
@@ -37,18 +38,19 @@ async function bootstrap() {
       app.enableVersioning({ type: VersioningType.URI, defaultVersion: '1' });
       await app.get(PrismaService).enableShutdownHooks(app);
 
-      const configService = app.get(ConfigService);
+      const configService = app.get<ConfigService<AppConfig>>(ConfigService);
       const port = configService.get<number>('APP_PORT', { infer: true });
       const swaggerPath = configService.get<string>('SWAGGER_PATH', {
         infer: true,
       });
 
       //config swagger
+      const swaggerConfig = configService.get<AppConfig['swagger']>('swagger');
       const config = new DocumentBuilder()
         .addBearerAuth()
-        .setTitle('Leadgen Platform')
-        .setDescription('API docs for leadgen platform')
-        .setVersion('0.7.0')
+        .setTitle(swaggerConfig.title)
+        .setDescription(swaggerConfig.description)
+        .setVersion(swaggerConfig.version)
         .build();
 
       const document = SwaggerModule.createDocument(app, config, {

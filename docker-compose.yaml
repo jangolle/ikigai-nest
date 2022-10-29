@@ -13,7 +13,7 @@ services:
     env_file:
       - .env
     # Run a command against the development stage of the image
-    command: yarn run start:dev
+    command: yarn start:docker:dev
     ports:
       - ${APP_PORT}:${APP_PORT}
     depends_on:
@@ -21,7 +21,7 @@ services:
   cron:
     <<: *default-app
     ports: []
-    command: yarn run start:jobs
+    command: yarn start:docker:jobs
   db:
     image: mysql:8.0
     restart: always

@@ -1,5 +1,5 @@
 {
-  "name": "leadgen-platform",
+  "name": "ikigai-nest",
   "version": "0.0.1",
   "description": "",
   "author": "",
@@ -16,6 +16,8 @@
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
     "start:jobs": "APP_MODE=jobs nest start --watch",
+    "start:docker:dev": "yarn prisma:push && yarn prisma:client && yarn start:dev",
+    "start:docker:jobs": "yarn prisma:push && yarn prisma:client && yarn start:jobs",
     "prisma:client": "prisma generate",
     "prisma:ui": "prisma studio",
     "prisma:dev": "prisma migrate dev --name",

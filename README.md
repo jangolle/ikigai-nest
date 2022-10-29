@@ -207,7 +207,7 @@ Also you could run UI client for simple data management if you prefer.
 $ yarn prisma:ui
 ```
 
-By default this run instance of [Prisma Studio](https://www.prisma.io/docs/concepts/components/prisma-studio) on [localhost:5555](localhost:5555).
+By default this run instance of [Prisma Studio](https://www.prisma.io/docs/concepts/components/prisma-studio) on [localhost:5555](http://localhost:5555).
 
 ## Commands
 
