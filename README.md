@@ -2,7 +2,7 @@
 
 ## Description
 
-This is universal server app starter kit built on top of [Nest](https://github.com/nestjs/nest) framework with TypeScript.
+Universal server app starter kit built on top of [Nest](https://github.com/nestjs/nest) framework with TypeScript.
 
 Includes:
 - [Nest Commander](https://docs.nestjs.com/recipes/nest-commander)
