@@ -7,12 +7,12 @@ import { IdentitySafe } from 'src/modules/identity';
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy) {
   constructor(private readonly authService: AuthService) {
-    super();
+    super({ usernameField: 'email' });
   }
 
-  async validate(username: string, password: string): Promise<IdentitySafe> {
+  async validate(email: string, password: string): Promise<IdentitySafe> {
     const identity = await this.authService.validateIdentityByEmailAndPassword(
-      username,
+      email,
       password,
     );
     if (!identity) {

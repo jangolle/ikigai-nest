@@ -116,7 +116,7 @@ describe('AuthController (e2e)', () => {
     it('should fail with invalid credentials', async () => {
       return request(app.getHttpServer())
         .post('/v1/auth/sign-in')
-        .send({ username: credentials.email, password: '87654321' })
+        .send({ email: credentials.email, password: '87654321' })
         .expect(401)
         .expect((res) =>
           expect(res.body).toEqual(
@@ -130,7 +130,7 @@ describe('AuthController (e2e)', () => {
     it('should return proper jwt token that will authorized GET /v1/auth/me', () => {
       return request(app.getHttpServer())
         .post('/v1/auth/sign-in')
-        .send({ username: credentials.email, password: credentials.password })
+        .send({ email: credentials.email, password: credentials.password })
         .expect(201)
         .expect(async ({ body }) => {
           expect(body).toEqual({ token: expect.anything() });

@@ -21,7 +21,7 @@ POST {{baseUrl}}/{{version}}/auth/sign-in
 Content-Type: application/json
 
 {
-    "username": "test@mail.com",
+    "email": "test@mail.com",
     "password": "{{securePassword}}"
 }
 
