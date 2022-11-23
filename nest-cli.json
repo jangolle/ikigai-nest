@@ -10,6 +10,8 @@
           "introspectComments": true
         }
       }
-    ]
+    ],
+    "assets": [{"include": "**/*.hbs", "outDir": "dist/src"}],
+    "watchAssets": true
   }
 }

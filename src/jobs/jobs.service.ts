@@ -9,7 +9,7 @@ export class JobsService {
   constructor(private readonly appService: AppService) {}
 
   // showcase for crontab usages - remove from real application
-  @Cron(CronExpression.EVERY_5_SECONDS)
+  @Cron(CronExpression.EVERY_MINUTE)
   async healthcheck() {
     this.logger.log(`Status: ${await this.appService.getStatus()}`);
   }

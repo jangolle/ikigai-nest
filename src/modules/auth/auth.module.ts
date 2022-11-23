@@ -6,7 +6,9 @@ import { ConfigService } from '@nestjs/config';
 import { AuthController } from './auth.controller';
 import { LocalStrategy } from './strategies/local.strategy';
 import { JwtStrategy } from './strategies/jwt.strategy';
+import { OtpStrategy } from './strategies/otp.strategy';
 
+// TODO: organize app -> module -> service configs
 @Module({
   imports: [
     JwtModule.registerAsync({
@@ -23,6 +25,6 @@ import { JwtStrategy } from './strategies/jwt.strategy';
     IdentityModule,
   ],
   controllers: [AuthController],
-  providers: [AuthService, LocalStrategy, JwtStrategy],
+  providers: [AuthService, LocalStrategy, JwtStrategy, OtpStrategy],
 })
 export class AuthModule {}

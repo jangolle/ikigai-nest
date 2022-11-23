@@ -8,9 +8,21 @@ datasource db {
 }
 
 model Identity {
-  id           String   @id @default(uuid())
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-  email        String?  @unique
-  passwordHash String?
+  id              String   @id @default(uuid())
+  email           String?  @unique
+  isEmailVerified Boolean  @default(false)
+  passwordHash    String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  otps            Otp[]
+}
+
+model Otp {
+  id          String   @id @default(uuid())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  expiredAt   DateTime
+  isActivated Boolean  @default(false)
+  identityId  String
+  identity    Identity @relation(fields: [identityId], references: [id])
 }

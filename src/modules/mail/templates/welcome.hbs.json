@@ -1,0 +1,18 @@
+{
+  "common": {
+    "product": {
+      "name": "Obi-Wan",
+      "homeUrl": "https://www.example.com"
+    },
+    "contacts": {
+      "support": {
+        "email": "obi-wan@example.net"
+      }
+    },
+    "company": {
+      "name": "Acme LLC",
+      "address": "1428 Elm st., Springwood, OH, US"
+    }
+  },
+  "actionUrl": "https://www.example.com"
+}

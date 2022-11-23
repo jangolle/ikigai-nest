@@ -12,7 +12,7 @@ POST {{baseUrl}}/{{version}}/auth/sign-up
 Content-Type: application/json
 
 {
-    "email": "test@mail.com",
+    "email": "admin+test14@devpride.me",
     "password": "{{securePassword}}"
 }
 
@@ -28,3 +28,6 @@ Content-Type: application/json
 ### Get authorized user details
 GET {{baseUrl}}/{{version}}/auth/me
 Authorization: Bearer {{jwt}}
+
+### Verify user email with otp
+POST {{baseUrl}}/{{version}}/auth/verify-email?otp=64f68d6c-a934-45bb-b83c-74ac34c92030

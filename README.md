@@ -9,12 +9,14 @@ Includes:
 - [Nest Schedule](https://docs.nestjs.com/techniques/task-scheduling)
 - [Nest Swagger](https://docs.nestjs.com/openapi/introduction)
 - [Nest Validation](https://docs.nestjs.com/techniques/validation)
+- [Nest Events](https://docs.nestjs.com/techniques/events)
+- [Nest Bull (queues)](https://docs.nestjs.com/techniques/queues)
 - [Nest Config](https://docs.nestjs.com/techniques/configuration)
 - [Prisma](https://docs.nestjs.com/recipes/prisma)
 - [Joi](https://joi.dev/api/)
 - [Passport](https://docs.nestjs.com/security/authentication)
 
-## Getting started
+# Getting started
 
 Create local dev copy for `.env` file.
 
@@ -60,6 +62,14 @@ Jobs must be described in cron-way in separate [jobs](./src/jobs/jobs.service.ts
 
 Read more about NestJS [task scheduling](https://docs.nestjs.com/techniques/task-scheduling).
 
+### PROCESSORS
+
+Creates NestApplicationContext and infinite loop as worker-consumer for bull queues.
+
+Starting worker with [ProcessorsModule](./src/processors/processors.module.ts) directory.
+
+Read more about NestJS [queue consumers](https://docs.nestjs.com/techniques/queues#consumers).
+
 ## Running the main in `server` mode
 
 ```bash
@@ -82,7 +92,16 @@ $ yarn start:prod
 $ yarn start:jobs
 ```
 
-## Test
+## Running jobs app in `processors` mode
+
+`Precondictions:` yarn build
+
+```bash
+# development
+$ yarn start:processors
+```
+
+## Tests
 
 ```bash
 # unit and e2e tests and oneliner
@@ -98,6 +117,7 @@ $ yarn test:e2e
 $ yarn test:cov
 ```
 
+# Overview
 
 ## Directory structure
 
@@ -106,12 +126,13 @@ $ yarn test:cov
 - [src/](./src/) - directory for project sources.
   - [commands/](./src/commands/) - directory with `*.command.ts` each one for separate command. More about [Nest Commander](https://docs.nestjs.com/recipes/nest-commander)
   - [config/](./src/config/) - directory with configurations for your modules and components. More about [Nest Config](https://docs.nestjs.com/techniques/configuration)
-  - [jobs/](./src/jobs/) - main jobs module. Each service here is aggregation for `@Cron` handlers. More about [Nest Schedule](https://docs.nestjs.com/techniques/task-scheduling)
+  - [jobs/](./src/jobs/) - jobs module. Each service here is aggregation for `@Cron` handlers. More about [Nest Schedule](https://docs.nestjs.com/techniques/task-scheduling)
   - [modules/](./src/modules/) - directory for application modules. More about [Nest Modules](https://docs.nestjs.com/modules)
     - [auth/](./src/modules/auth/) - implementation of auth. More at [Auth](#auth).
     - [identity/](./src/modules/identity/) - module that wrap `Identity` as core auth entity.
+  - [processors/](./src/processors/) - processors module. Each component under the `impl` directory here is an implementation of `@Processor` that consume concrete queue. More about [Nest Bull (queues)](https://docs.nestjs.com/techniques/queues)
   - [services/](./src/services/) - directory for common application services.
-- [test](./test/) - directory for e2e tests.
+- [test/](./test/) - directory for e2e tests.
 
 
 ## Validation
@@ -151,6 +172,39 @@ async me(@Request() req: AuthenticatedRequest): Promise<IdentitySafe> {}
 @Post('/sign-in')
 async login(@Request() req: AuthenticatedRequest) {}
 ```
+
+## Events
+
+Events in application build with [Nest Events](https://docs.nestjs.com/techniques/events)
+
+### Guidelines
+
+- create `events` sub-directory in modules where you emit events from. Check [example](src/modules/identity/events/)
+- create separate `*Listener` classes for grouping `@OnEvent()` handlers over logic scope. Place them in `listeners` sub-directory where you handle emited events. Check [example](src/modules/identity/listeners/identity.listener.ts)
+
+## Queues
+
+Queus in application build with [Nest Bull](https://docs.nestjs.com/techniques/queues)
+
+### Enqueue job
+
+Check [example](src/modules/identity/listeners/identity.listener.ts) with `mailQueue`.
+
+### Dequeue job
+
+Jobs are consuming by [processors](#processors)
+
+### How it works
+
+Queues management operates over `Redis Server` (`cache` image in [docker-compose.yaml](./docker-compose.yaml))
+
+### Bull Dashboard
+
+Application starts with [Bull Board](https://github.com/felixmosh/bull-board).
+
+By default it's available at [localhost:3000/bull](localhost:3000/bull).
+
+You can override route by changing env variable `BULL_BOARD_PATH`;
 
 ## IDE REST client
 

@@ -3,6 +3,8 @@ import { AuthService } from './auth.service';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from 'src/services/prisma.service';
 import { IdentityModule } from 'src/modules/identity/identity.module';
+import { IdentityListener } from '../identity/listeners/identity.listener';
+import { IdentityService } from '../identity/services/identity.service';
 
 describe('AuthService', () => {
   let service: AuthService;
@@ -11,8 +13,12 @@ describe('AuthService', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [IdentityModule],
-      providers: [AuthService, JwtService],
+      providers: [AuthService, JwtService, IdentityService, IdentityListener],
     })
+      .overrideProvider(IdentityService)
+      .useValue({})
+      .overrideProvider(IdentityListener)
+      .useValue({})
       .overrideProvider(PrismaService)
       .useValue(prismaService)
       .compile();

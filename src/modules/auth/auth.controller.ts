@@ -3,7 +3,8 @@ import {
   ConflictException,
   Controller,
   Get,
-  HttpCode,
+  Logger,
+  LoggerService,
   Post,
   Request,
   UseGuards,
@@ -15,10 +16,21 @@ import { RegistrationDto } from './dto/registration.dto';
 import { RegistrationValidationPipe } from './validation.pipe';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { IdentitySafe } from 'src/modules/identity';
+import { OtpAuthGuard } from './guards/otp.guard';
 
 @Controller('auth')
 export class AuthController {
+  private readonly logger: LoggerService = new Logger(AuthController.name);
+
   constructor(private readonly authService: AuthService) {}
+
+  @UseGuards(OtpAuthGuard)
+  @Post('/verify-email')
+  async verifyEmail(
+    @Request() req: AuthenticatedRequest,
+  ): Promise<{ success: boolean }> {
+    return { success: await this.authService.verifyEmail(req.user) };
+  }
 
   @UseGuards(JwtAuthGuard)
   @Get('/me')
@@ -51,6 +63,7 @@ export class AuthController {
 
       return { id };
     } catch (error) {
+      this.logger.error(error);
       throw new ConflictException('Identity already registered');
     }
   }

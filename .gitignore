@@ -2,8 +2,8 @@
 /dist
 /node_modules
 
-# data
-db
+# provision
+.volumes
 
 # Logs
 logs
